@@ -34,7 +34,8 @@ public class FileParsing {
 					TestExecution.SortTransactionsbasedonTerminalID(AS2805Parser.ReturnElemnetValue("41",ParsedMessage),ParsedMessage);
 				}
 				TransactionCounter ++;
-			}			
+			}
+			TestExecution.Translate();
 			TestExecution.CreateResultFiles();
 			
 		} catch (IOException e) {

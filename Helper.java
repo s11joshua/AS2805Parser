@@ -73,4 +73,45 @@ public class Helper {
 		      }*/
 		}		    
 	}
+	
+	public static String FillAS2805Messages(String Message,int MessageLength,String FillValue, boolean prefix){
+		String FillString = "";
+		int counter = 0;
+		int ExpectedStringLength = MessageLength;
+		int ActualMessageLength = Message.length();
+		while(counter <= (ExpectedStringLength-ActualMessageLength)){
+			FillString = FillString + FillValue;
+			counter ++;
+		}
+		if(prefix){
+			return FillString + Message;
+		}else{
+			return Message + FillString;
+		}
+			
+	}
+	public static String ConvertAs$Amount(String Amount, int numberofdecimalplaces){
+		String ReturnString = null;
+		if (Long.parseLong(Amount) > 0 ){
+			ReturnString = "$" + Long.parseLong(Amount.subSequence(0,(Amount.length() - numberofdecimalplaces)).toString());
+			ReturnString = ReturnString + "." + Amount.substring(Amount.length() - numberofdecimalplaces).toString();
+			return ReturnString;
+		}else{
+			ReturnString = "$0";
+			return ReturnString;
+		}
+	}
+	
+	public static String ConverttoDecimal(String Amount, int numberofdecimalplaces){
+		String ReturnString = null;
+		
+		if (Long.parseLong(Amount) > 0 ){
+			ReturnString = Long.toString(Long.parseLong(Amount.subSequence(0,(Amount.length() - numberofdecimalplaces)).toString()));
+			ReturnString = ReturnString + "." + Amount.substring(Amount.length() - numberofdecimalplaces).toString();
+			return ReturnString;
+		}else{
+			ReturnString = "0";
+			return ReturnString;
+		}
+	}
 }
