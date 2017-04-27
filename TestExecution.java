@@ -9,7 +9,7 @@ public class TestExecution {
 	public static String executionfolder;
 	public static String TestResultUnsortedFile;
 	static final int NumberOfTerminals = 10;
-	public static String[][] TransactionbasedonTerminalID = new String[NumberOfTerminals][100]; 
+	public static String[][] TransactionbasedonTerminalID = new String[NumberOfTerminals][100];
 	
 	public static void CretareTestExecutionFolder(){
 		RootFolder = Helper.GetConfigParameter("TestResultFolder");
@@ -52,7 +52,18 @@ public class TestExecution {
 		int transactionCounter = 0;
 		
 		while(TransactionbasedonTerminalID[counter][transactionCounter] != null){
-			String Filename = TransactionbasedonTerminalID[counter][transactionCounter].toString() + "_" + new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime()) + ".txt";
+			String Filename = TransactionbasedonTerminalID[counter][transactionCounter].toString();
+			
+			int LengthofFeild41 = Filename.length();
+			int Hexcounter = 0;
+			String CalculatedTID = "";
+			while((Hexcounter + 2) <= LengthofFeild41){
+				CalculatedTID = CalculatedTID + (Integer.parseInt(Filename.subSequence(Hexcounter, (Hexcounter+2)).toString()) - 30);
+				Hexcounter = Hexcounter + 2;
+			}
+			
+			Filename = CalculatedTID + "_" + new SimpleDateFormat("HHmmss").format(Calendar.getInstance().getTime()) + ".txt";
+						
 			Helper.CreateFile(executionfolder, Filename);
 			transactionCounter = 1;
 			while(TransactionbasedonTerminalID[counter][transactionCounter] != null){
@@ -76,7 +87,9 @@ public class TestExecution {
 				String lines[] = AS2805ParsedMessage.split("\\r?\\n\\n");
 				String ReturnString = "";
 				for (String s: lines) {
-					if(s.toString().substring(0, 2).equals("4:")){
+					if(s.toString().substring(0, 2).equals("3:")){
+						ReturnString = ReturnString + "3: " + AS2805Parser.Feild03(AS2805ParsedMessage) + "\n";						
+					}else if(s.toString().substring(0, 2).equals("4:")){
 						ReturnString = ReturnString + "4: " + AS2805Parser.Feild04(AS2805ParsedMessage) + "\n";						
 					}else if(s.toString().substring(0, 3).equals("22:")){
 						ReturnString = ReturnString + s.toString() + "\n" + AS2805Parser.Feild22(AS2805ParsedMessage) + "\n";
@@ -88,6 +101,10 @@ public class TestExecution {
 						ReturnString = ReturnString + s.toString() + "\n" + AS2805Parser.Feild39(AS2805ParsedMessage) + "\n";
 					}else if(s.toString().substring(0, 3).equals("41:")){
 						ReturnString = ReturnString + s.toString() + "\n" + AS2805Parser.Feild41(AS2805ParsedMessage) + "\n";
+					}else if(s.toString().substring(0, 3).equals("42:")){
+						ReturnString = ReturnString + s.toString() + "\n" + AS2805Parser.Feild42(AS2805ParsedMessage) + "\n";
+					}else if(s.toString().substring(0, 3).equals("52:")){
+						ReturnString = ReturnString + s.toString() + "\n" + "PIN entered" + "\n"  + "\n";;
 					}else if(s.toString().substring(0, 3).equals("62:")){
 						ReturnString = ReturnString + s.toString() + "\n" + AS2805Parser.Feild62(AS2805ParsedMessage) + "\n";
 					}else if(s.toString().substring(0, 3).equals("63:")){
@@ -95,21 +112,9 @@ public class TestExecution {
 					}
 					else{
 						ReturnString = ReturnString + s.toString() + "\n"+ "\n";
-					}
-					 
+					}	 
 				}
 				TransactionbasedonTerminalID[counter][transactionCounter] = ReturnString;
-				/*AS2805Parser.Feild04(AS2805ParsedMessage);
-				AS2805Parser.Feild22(AS2805ParsedMessage);
-				AS2805Parser.Feild25(AS2805ParsedMessage);
-				AS2805Parser.Feild32(AS2805ParsedMessage);
-				AS2805Parser.Feild39(AS2805ParsedMessage);
-				AS2805Parser.Feild41(AS2805ParsedMessage);
-				//AS2805Parser.Feild42(AS2805ParsedMessage);
-				AS2805Parser.Feild62(AS2805ParsedMessage);
-				AS2805Parser.Feild63(AS2805ParsedMessage);*/
-				//Helper.WriteToTxtFile(TransactionbasedonTerminalID[counter][transactionCounter].toString(), executionfolder + Filename);
-				System.out.println(TransactionbasedonTerminalID[counter][transactionCounter]);
 				transactionCounter ++;
 			}
 			transactionCounter = 0;

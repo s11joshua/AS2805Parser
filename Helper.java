@@ -65,12 +65,9 @@ public class Helper {
 		    	
 		    	if (listOfFiles[i].getName().substring(listOfFiles[i].getName().length() - 3).equals("txt")){
 		    		FileParsing.FileList[counter] = listOfFiles[i].getAbsolutePath();
-		    		//System.out.println("File " + listOfFiles[i].getAbsolutePath());
 		    		counter ++;
 		    	}
-		      } /*else if (listOfFiles[i].isDirectory()) {
-		        System.out.println("Directory " + listOfFiles[i].getName());
-		      }*/
+		      }
 		}		    
 	}
 	
@@ -90,6 +87,7 @@ public class Helper {
 		}
 			
 	}
+	
 	public static String ConvertAs$Amount(String Amount, int numberofdecimalplaces){
 		String ReturnString = null;
 		if (Long.parseLong(Amount) > 0 ){
